@@ -1,13 +1,11 @@
-import { ScreenContent } from 'components/ScreenContent';
-import { StatusBar } from 'expo-status-bar';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 import './global.css';
+import { Text } from 'react-native';
 
 export default function App() {
   return (
-    <>
-      <ScreenContent title="Home" path="App.tsx"></ScreenContent>
-      <StatusBar style="auto" />
-    </>
+    <SafeAreaView>
+      <Text className="text-3xl font-bold ">Hello world!</Text>
+    </SafeAreaView>
   );
 }
