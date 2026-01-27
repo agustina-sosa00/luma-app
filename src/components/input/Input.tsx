@@ -9,7 +9,7 @@ interface InputProps {
   placeholder?: string;
   value?: string;
   onChangeText?: (text: string) => void;
-  variant?: InputVariant;
+  variant: InputVariant;
   disabled?: boolean;
   containerClassName?: string;
 }
@@ -26,7 +26,7 @@ export default forwardRef<TextInput, InputProps>(function Input(
 
   return (
     <View className={`flex gap-1 ${containerClassName ?? ''}`}>
-      {label && <Text className="text-sm font-semibold text-black">{label}</Text>}
+      {label && <Text className="text-sm font-semibold text-textPrimary">{label}</Text>}
 
       <View className="relative">
         <TextInput
@@ -39,7 +39,7 @@ export default forwardRef<TextInput, InputProps>(function Input(
           secureTextEntry={variant === 'password' && !showPassword}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          className={`
+          className={` h-12 
             rounded border bg-white px-3 py-2 text-base text-black
             ${focused ? 'border-primary' : 'border-gray-400'}
             ${disabled ? 'border-gray-300 bg-gray-100' : ''}
