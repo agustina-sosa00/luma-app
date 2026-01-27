@@ -16,6 +16,9 @@ module.exports = {
         disabled: '#BDBDBD',
         customGray: '#F5F5F5',
       },
+      fontFamily: {
+        outfit: ['Outfit', 'sans-serif'],
+      },
     },
   },
   plugins: [],
