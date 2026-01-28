@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import './global.css';
 import { useFonts } from 'expo-font';
-import Home from '@/screens/Home';
 import Login from '@/screens/Login/Login';
+import AppNavigator from '@/navigation/AppNavigator';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -13,5 +13,7 @@ export default function App() {
   const [session, setSession] = useState(false);
 
   if (!fontsLoaded) return null;
-  return <SafeAreaView>{session ? <Home /> : <Login setSession={setSession} />}</SafeAreaView>;
+  return (
+    <SafeAreaView>{session ? <AppNavigator /> : <Login setSession={setSession} />}</SafeAreaView>
+  );
 }
