@@ -27,6 +27,7 @@ export default function Login({ setSession }: LoginProps) {
           variant="password"
           containerClassName=" w-full mb-7"
         />
+
         <Button
           variant="primary"
           text="Iniciar Sesión"

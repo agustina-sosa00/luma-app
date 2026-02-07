@@ -14,6 +14,8 @@ export default function App() {
 
   if (!fontsLoaded) return null;
   return (
-    <SafeAreaView>{session ? <AppNavigator /> : <Login setSession={setSession} />}</SafeAreaView>
+    <SafeAreaView className="flex-1">
+      {session ? <AppNavigator /> : <Login setSession={setSession} />}
+    </SafeAreaView>
   );
 }
