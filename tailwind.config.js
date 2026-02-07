@@ -15,6 +15,7 @@ module.exports = {
         placeholder: '#CCCCCC',
         disabled: '#BDBDBD',
         customGray: '#F5F5F5',
+        onPrimary: '#FFFFFF',
       },
       fontFamily: {
         outfit: ['Outfit', 'sans-serif'],
