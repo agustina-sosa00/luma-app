@@ -42,8 +42,7 @@ export default function Search({
       <TextInput
         ref={inputRef}
         className={`
-          h-10 w-[250px] rounded border border-gray-300 p-2 text-base
-          ${isSearching ? 'bg-gray-100 text-gray-400' : 'bg-white'}
+          h-10 w-full rounded-md border border-borders bg-onPrimary p-2 text-base
         `}
         placeholder={placeholder}
         value={inputName}
@@ -61,7 +60,6 @@ export default function Search({
         disabled={isSearching}
         loader={isLoading}
         icon={<Ionicons name="search" size={18} color="white" />}
-        containerClassName="h-10 w-10 px-0"
       />
 
       {/* CLEAN */}
@@ -70,8 +68,7 @@ export default function Search({
           variant="iconButton"
           onPress={handleClean}
           disabled={!isSearching}
-          icon={<MaterialIcons name="cleaning-services" size={18} color="#6233B9" />}
-          containerClassName="h-10 w-10 px-0 bg-red-600"
+          icon={<MaterialIcons name="cleaning-services" size={18} />}
         />
       )}
     </View>
