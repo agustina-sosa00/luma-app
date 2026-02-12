@@ -34,7 +34,7 @@ const loaderColors = {
   iconButton: '#6233B9',
 };
 
-const baseStyles = 'flex-row items-center justify-center gap-2 rounded px-4 py-2';
+const baseStyles = 'flex-row items-center justify-center gap-2 rounded-md px-4 py-2';
 
 export default function Button({
   text,

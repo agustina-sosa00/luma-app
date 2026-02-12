@@ -40,7 +40,7 @@ export default forwardRef<TextInput, InputProps>(function Input(
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           className={` h-12 
-            rounded border bg-white px-3 py-2 text-base text-black
+            rounded-md border bg-white px-3 py-2 text-base text-black
             ${focused ? 'border-primary' : 'border-gray-400'}
             ${disabled ? 'border-gray-300 bg-gray-100' : ''}
           `}
