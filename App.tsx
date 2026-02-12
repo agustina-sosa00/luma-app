@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import './global.css';
 import { useFonts } from 'expo-font';
-import Login from '@/screens/Login/Login';
+import Login from '@/screens/Auth/Login/Login';
 import AppNavigator from '@/navigation/AppNavigator';
+import Register from '@/screens/Auth/Register/Register';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -14,11 +15,18 @@ export default function App() {
   });
 
   const [session, setSession] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
 
   if (!fontsLoaded) return null;
   return (
     <SafeAreaView className="flex-1">
-      {session ? <AppNavigator /> : <Login setSession={setSession} />}
+      {session ? (
+        <AppNavigator />
+      ) : isLogin ? (
+        <Login setSession={setSession} setIsLogin={setIsLogin} />
+      ) : (
+        <Register setIsLogin={setIsLogin} />
+      )}
     </SafeAreaView>
   );
 }
