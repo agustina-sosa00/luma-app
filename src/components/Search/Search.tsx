@@ -38,11 +38,11 @@ export default function Search({
   };
 
   return (
-    <View className="flex-row items-center gap-1 rounded-lg">
+    <View className=" flex-row items-center gap-1 rounded-lg">
       <TextInput
         ref={inputRef}
         className={`
-          h-10 w-full rounded-md border border-borders bg-onPrimary p-2 text-base
+          h-10 w-96 rounded-md border border-borders bg-onPrimary p-2 text-base
         `}
         placeholder={placeholder}
         value={inputName}
