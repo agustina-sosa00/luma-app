@@ -10,7 +10,7 @@ interface Props {
 export default function ButtonCategory({ sourceIcon, sizeIcon, textButton }: Props) {
   return (
     <Pressable>
-      <View className="flex items-center justify-center bg-primary px-6 py-7">
+      <View className="flex h-20 w-28 items-center justify-center rounded-md bg-primary">
         <Icon size={sizeIcon} source={sourceIcon} color="#ffffff" />
         <Text className="text-onPrimary">{textButton}</Text>
       </View>
