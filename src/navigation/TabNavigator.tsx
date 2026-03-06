@@ -5,7 +5,11 @@ import MapScreen from '@/screens/Map/MapScreen';
 import { Icon } from 'react-native-paper';
 const Tab = createBottomTabNavigator();
 
-export default function TabNavigator() {
+interface TabNavigatorProps {
+  setSession: (session: boolean) => void;
+}
+
+export default function TabNavigator({ setSession }: TabNavigatorProps) {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -23,13 +27,13 @@ export default function TabNavigator() {
       }}>
       <Tab.Screen
         name="Home"
-        component={Home}
         options={{
           tabBarIcon: ({ color }) => <Icon source="home" size={26} color={color} />,
           title: 'titleeeeee',
           tabBarLabel: 'name boton',
-        }}
-      />
+        }}>
+        {(props) => <Home {...props} setSession={setSession} />}
+      </Tab.Screen>
       <Tab.Screen
         name="Mapa"
         component={MapScreen}

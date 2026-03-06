@@ -21,7 +21,7 @@ export default function App() {
   return (
     <SafeAreaView className="flex-1">
       {session ? (
-        <AppNavigator />
+        <AppNavigator setSession={setSession} />
       ) : isLogin ? (
         <Login setSession={setSession} setIsLogin={setIsLogin} />
       ) : (
