@@ -1,10 +1,10 @@
 import { NavigationContainer } from '@react-navigation/native';
 import TabNavigator from './TabNavigator';
 
-export default function AppNavigator() {
+export default function AppNavigator(setSession: any) {
   return (
     <NavigationContainer>
-      <TabNavigator />
+      <TabNavigator setSession={setSession} />
     </NavigationContainer>
   );
 }

@@ -1,11 +1,20 @@
-import { Image, ScrollView, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, Text, View } from 'react-native';
 import avatarLuma from '@assets/avatarLuma.png';
 import { Icon } from 'react-native-paper';
 import Search from '@/components/Search/Search';
 import ButtonCategory from '@/components/buttons/ButtonCategory';
 import CategoryCarousel from './components/CarouselCategories';
 import CardPlaceHome from './components/CardPlacesHome';
-export default function Home() {
+import { logout } from '@/utils/logout';
+import { auth, db } from '@/firebase/firebaseConfig';
+import { doc, DocumentData, getDoc } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+interface HomeProps {
+  setSession: (session: boolean) => void;
+}
+
+export default function Home({ setSession }: HomeProps) {
+  const [userData, setUserData] = useState<DocumentData | null>(null);
   const MOCK_PLACES = [
     {
       id: '1',
@@ -38,16 +47,40 @@ export default function Home() {
       },
     },
   ];
+
+  async function getUserData() {
+    const user = auth.currentUser;
+
+    if (!user) return;
+
+    const docRef = doc(db, 'users', user.uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log('Datos del usuario:', docSnap.data());
+      setUserData(docSnap.data());
+    }
+  }
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  console.log(userData);
   return (
     <ScrollView className="flex-1 bg-onPrimary" showsVerticalScrollIndicator={false}>
       <View className="flex flex-1 gap-8 bg-onPrimary px-5 py-2">
         <View className="flex w-full flex-row  justify-between ">
           <View>
-            <Text className="text-lg font-semibold text-textPrimary">Hola Agus!</Text>
+            <Text className="text-lg font-semibold text-textPrimary">Hola {userData?.nombre}!</Text>
             <Text className=" text-base font-medium text-disabled">
               <Icon source={'map-marker'} size={16} color="#6233B9" /> Ciudad de Buenos Aires
             </Text>
           </View>
+
+          <Pressable onPress={() => logout(setSession)}>
+            <Text className="text-lg font-semibold text-textPrimary">Cerrar Sesión</Text>
+          </Pressable>
           <Image source={avatarLuma} className="h-16 w-16 rounded-full" />
         </View>
         <View className="flex h-16 w-full justify-center ">

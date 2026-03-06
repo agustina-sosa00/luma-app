@@ -2,6 +2,9 @@ import { Image, Pressable, Text, View } from 'react-native';
 import logo from '@assets/logoLuma.png';
 import Input from '@/components/input/Input';
 import Button from '@/components/buttons/Button';
+import { useState } from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/firebase/firebaseConfig';
 
 interface LoginProps {
   setSession: (session: boolean) => void;
@@ -9,6 +12,33 @@ interface LoginProps {
 }
 
 export default function Login({ setSession, setIsLogin }: LoginProps) {
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+  });
+
+  function handleOnChange(field: string, value: string) {
+    setForm({
+      ...form,
+      [field]: value,
+    });
+  }
+
+  async function login(email: string, password: string) {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+      console.log('Usuario logueado:', userCredential.user);
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  }
+
+  function onSubmit() {
+    login(form.email, form.password);
+    setSession(true);
+  }
+
   return (
     <View className="w-full flex-1 items-center justify-center  bg-background p-10">
       <View className="mb-7 flex items-center">
@@ -21,25 +51,29 @@ export default function Login({ setSession, setIsLogin }: LoginProps) {
           placeholder="micorreo@gmail.com"
           variant="email"
           containerClassName=" w-full mb-7"
+          value={form.email}
+          onChangeText={(text) => handleOnChange('email', text)}
         />
         <Input
           label="Contraseña"
           placeholder="********"
           variant="password"
           containerClassName=" w-full mb-7"
+          value={form.password}
+          onChangeText={(text) => handleOnChange('password', text)}
         />
 
         <Button
           variant="primary"
           text="Iniciar Sesión"
           containerClassName="w-full h-12 mb-7"
-          onPress={() => setSession(true)}
+          onPress={onSubmit}
         />
 
+        <Text className="mr-1 font-poppins font-medium text-textPrimary">¿No tienes cuenta?</Text>
         <Pressable
           className="flex w-full flex-row items-center justify-center"
           onPress={() => setIsLogin(false)}>
-          <Text className="mr-1 font-poppins font-medium text-textPrimary">¿No tienes cuenta?</Text>
           <Text className="font-poppinsSemiBold  text-primary">Regístrate</Text>
         </Pressable>
       </View>
