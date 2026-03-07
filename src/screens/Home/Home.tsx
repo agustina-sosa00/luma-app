@@ -10,8 +10,18 @@ import { auth, db } from '@/firebase/firebaseConfig';
 import { useEffect, useState } from 'react';
 import { ref, get } from 'firebase/database';
 import { HomeProps, User } from './types/typeHome';
+import { useDispatch, useSelector } from 'react-redux';
+import { addUser } from '@/store/app/appSlice';
+import { useGetCategoriesQuery } from '@/services/appServices';
 
 export default function Home({ setSession }: HomeProps) {
+  const userStore = useSelector((state: any) => state.app.user);
+  const dispatch = useDispatch();
+
+  const { data: categories } = useGetCategoriesQuery();
+
+  console.log('categories---------', categories);
+
   const [userData, setUserData] = useState<User | null>(null);
   const MOCK_PLACES = [
     {
@@ -51,14 +61,14 @@ export default function Home({ setSession }: HomeProps) {
 
     if (!user) return;
 
-    const snapshot = await get(ref(db, 'users/' + user.uid));
+    const snapshot = await get(ref(db, 'users/' + user?.uid));
 
     if (snapshot.exists()) {
       const data = snapshot.val();
-      console.log('Datos del usuario:', data);
-      setUserData(data);
+      dispatch(addUser(data));
     }
   }
+  console.log('Datos del usuario en el store:', userStore);
 
   useEffect(() => {
     getUserData();
@@ -70,13 +80,15 @@ export default function Home({ setSession }: HomeProps) {
       <View className="flex flex-1 gap-8 bg-onPrimary px-5 py-2">
         <View className="flex w-full flex-row  justify-between ">
           <View>
-            <Text className="text-lg font-semibold text-textPrimary">Hola {userData?.nombre}!</Text>
+            <Text className="text-lg font-semibold text-textPrimary">
+              Hola {userStore?.nombre}!
+            </Text>
             <Text className=" text-base font-medium text-disabled">
               <Icon source={'map-marker'} size={16} color="#6233B9" /> Ciudad de Buenos Aires
             </Text>
           </View>
 
-          <Pressable onPress={() => logout(setSession)}>
+          <Pressable onPress={() => logout()}>
             <Text className="text-lg font-semibold text-textPrimary">Cerrar Sesión</Text>
           </Pressable>
           <Image source={avatarLuma} className="h-16 w-16 rounded-full" />
@@ -90,12 +102,14 @@ export default function Home({ setSession }: HomeProps) {
           />
         </View>
         <CategoryCarousel>
-          <ButtonCategory textButton="Café" sourceIcon={'coffee'} sizeIcon={24} />
-          <ButtonCategory textButton="Aire Libre" sourceIcon={'coffee'} sizeIcon={24} />
-          <ButtonCategory textButton="Comidas" sourceIcon={'coffee'} sizeIcon={24} />
-          <ButtonCategory textButton="Bares" sourceIcon={'coffee'} sizeIcon={24} />
-          <ButtonCategory textButton="Cine" sourceIcon={'coffee'} sizeIcon={24} />
-          <ButtonCategory textButton="Teatro" sourceIcon={'coffee'} sizeIcon={24} />
+          {categories?.map((category) => (
+            <ButtonCategory
+              key={category.id}
+              textButton={category.nombreCat}
+              sourceIcon={category.icono}
+              sizeIcon={24}
+            />
+          ))}
         </CategoryCarousel>
         <View className="w-full ">
           <View className="flex w-full flex-row items-center justify-between">

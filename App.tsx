@@ -7,6 +7,8 @@ import Register from '@/screens/Auth/Register/Register';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/firebase/firebaseConfig';
+import { Provider } from 'react-redux';
+import { store } from '@/store/store';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -22,7 +24,7 @@ export default function App() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) setSession(true);
+      setSession(!!user);
     });
 
     return unsubscribe;
@@ -32,13 +34,15 @@ export default function App() {
 
   return (
     <SafeAreaView className="flex-1">
-      {session && authUser ? (
-        <AppNavigator setSession={setSession} />
-      ) : isLogin ? (
-        <Login setIsLogin={setIsLogin} setAuthUser={setAuthUser} />
-      ) : (
-        <Register setIsLogin={setIsLogin} />
-      )}
+      <Provider store={store}>
+        {session && authUser ? (
+          <AppNavigator setSession={setSession} />
+        ) : isLogin ? (
+          <Login setIsLogin={setIsLogin} setAuthUser={setAuthUser} />
+        ) : (
+          <Register setIsLogin={setIsLogin} />
+        )}
+      </Provider>
     </SafeAreaView>
   );
 }
