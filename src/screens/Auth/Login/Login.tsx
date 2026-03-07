@@ -7,11 +7,11 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/firebase/firebaseConfig';
 
 interface LoginProps {
-  setSession: (session: boolean) => void;
   setIsLogin: (login: boolean) => void;
+  setAuthUser: (authUser: boolean) => void;
 }
 
-export default function Login({ setSession, setIsLogin }: LoginProps) {
+export default function Login({ setIsLogin, setAuthUser }: LoginProps) {
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -27,7 +27,7 @@ export default function Login({ setSession, setIsLogin }: LoginProps) {
   async function login(email: string, password: string) {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
+      setAuthUser(true);
       console.log('Usuario logueado:', userCredential.user);
     } catch (error: any) {
       console.log(error.message);
@@ -36,7 +36,6 @@ export default function Login({ setSession, setIsLogin }: LoginProps) {
 
   function onSubmit() {
     login(form.email, form.password);
-    setSession(true);
   }
 
   return (
@@ -70,12 +69,14 @@ export default function Login({ setSession, setIsLogin }: LoginProps) {
           onPress={onSubmit}
         />
 
-        <Text className="mr-1 font-poppins font-medium text-textPrimary">¿No tienes cuenta?</Text>
-        <Pressable
-          className="flex w-full flex-row items-center justify-center"
-          onPress={() => setIsLogin(false)}>
-          <Text className="font-poppinsSemiBold  text-primary">Regístrate</Text>
-        </Pressable>
+        <View className="flex flex-row items-center justify-center gap-2">
+          <Text className=" font-poppins font-medium text-textPrimary">¿No tienes cuenta?</Text>
+          <Pressable
+            className="flex flex-row items-center justify-center"
+            onPress={() => setIsLogin(false)}>
+            <Text className="font-poppinsSemiBold  text-primary">Regístrate</Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );

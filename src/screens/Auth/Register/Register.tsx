@@ -28,7 +28,6 @@ export default function Register({ setIsLogin }: RegisterProps) {
         email: form.email,
         password: form.password,
       });
-
       alert('Cuenta creada. Verificá tu email.');
       setIsLogin(true);
     } catch (error: any) {

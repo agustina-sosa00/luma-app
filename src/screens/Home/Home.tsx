@@ -7,14 +7,12 @@ import CategoryCarousel from './components/CarouselCategories';
 import CardPlaceHome from './components/CardPlacesHome';
 import { logout } from '@/utils/logout';
 import { auth, db } from '@/firebase/firebaseConfig';
-import { doc, DocumentData, getDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
-interface HomeProps {
-  setSession: (session: boolean) => void;
-}
+import { ref, get } from 'firebase/database';
+import { HomeProps, User } from './types/typeHome';
 
 export default function Home({ setSession }: HomeProps) {
-  const [userData, setUserData] = useState<DocumentData | null>(null);
+  const [userData, setUserData] = useState<User | null>(null);
   const MOCK_PLACES = [
     {
       id: '1',
@@ -53,12 +51,12 @@ export default function Home({ setSession }: HomeProps) {
 
     if (!user) return;
 
-    const docRef = doc(db, 'users', user.uid);
-    const docSnap = await getDoc(docRef);
+    const snapshot = await get(ref(db, 'users/' + user.uid));
 
-    if (docSnap.exists()) {
-      console.log('Datos del usuario:', docSnap.data());
-      setUserData(docSnap.data());
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      console.log('Datos del usuario:', data);
+      setUserData(data);
     }
   }
 
