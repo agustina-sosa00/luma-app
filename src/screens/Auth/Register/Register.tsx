@@ -3,12 +3,14 @@ import Input from '@/components/input/Input';
 import { Pressable, Text, View } from 'react-native';
 import { useState } from 'react';
 import { registerUser } from './utils/register';
+import { registerSchema } from '@/validations/authSchema';
 
 interface RegisterProps {
   setIsLogin: (login: boolean) => void;
 }
 
 export default function Register({ setIsLogin }: RegisterProps) {
+  const [errors, setErrors] = useState<any>({});
   const [form, setForm] = useState({
     nombre: '',
     apellido: '',
@@ -20,6 +22,8 @@ export default function Register({ setIsLogin }: RegisterProps) {
 
   async function handleRegister() {
     try {
+      setErrors({});
+      await registerSchema.validate(form, { abortEarly: false });
       await registerUser({
         nombre: form.nombre,
         apellido: form.apellido,
@@ -31,7 +35,15 @@ export default function Register({ setIsLogin }: RegisterProps) {
       alert('Cuenta creada. Verificá tu email.');
       setIsLogin(true);
     } catch (error: any) {
-      console.log(error.message);
+      if (error.inner) {
+        const newErrors: any = {};
+
+        error.inner.forEach((err: any) => {
+          newErrors[err.path] = err.message;
+        });
+
+        setErrors(newErrors);
+      }
     }
   }
 
@@ -39,6 +51,11 @@ export default function Register({ setIsLogin }: RegisterProps) {
     setForm({
       ...form,
       [field]: value,
+    });
+
+    setErrors({
+      ...errors,
+      [field]: '',
     });
   }
 
@@ -48,59 +65,77 @@ export default function Register({ setIsLogin }: RegisterProps) {
         <Text className="font-outfit text-3xl font-bold text-primary">Crea tu cuenta</Text>
       </View>
       <View className="w-full">
-        <Input
-          label="Nombre"
-          placeholder="Agustina"
-          variant="text"
-          containerClassName="w-full mb-7"
-          value={form.nombre}
-          onChangeText={(text) => handleOnChange('nombre', text)}
-        />
-        <Input
-          label="Apellido"
-          placeholder="Sosa"
-          variant="text"
-          containerClassName="w-full mb-7"
-          value={form.apellido}
-          onChangeText={(text) => handleOnChange('apellido', text)}
-        />
-
-        <View className="flex flex-row gap-2">
+        <View className="mb-4">
           <Input
-            label="Provincia / Ciudad"
-            placeholder="Buenos Aires"
-            variant="email"
-            containerClassName="flex-1 mb-7"
-            value={form.provincia}
-            onChangeText={(text) => handleOnChange('provincia', text)}
-          />
-          <Input
-            label="Teléfono"
-            placeholder="1123465789"
+            label="Nombre"
+            placeholder="Agustina"
             variant="text"
-            containerClassName="flex-1 mb-7"
-            value={form.telefono}
-            onChangeText={(text) => handleOnChange('telefono', text)}
+            containerClassName="w-full"
+            value={form.nombre}
+            onChangeText={(text) => handleOnChange('nombre', text)}
           />
+          {errors.nombre && <Text className=" text-sm text-red-500">{errors.nombre}</Text>}
         </View>
 
-        <Input
-          label="Correo Electrónico"
-          placeholder="micorreo@gmail.com"
-          variant="email"
-          containerClassName=" w-full mb-7"
-          value={form.email}
-          onChangeText={(text) => handleOnChange('email', text)}
-        />
+        <View className="mb-4">
+          <Input
+            label="Apellido"
+            placeholder="Sosa"
+            variant="text"
+            containerClassName="w-full"
+            value={form.apellido}
+            onChangeText={(text) => handleOnChange('apellido', text)}
+          />
+          {errors.password && <Text className=" text-sm text-red-500">{errors.apellido}</Text>}
+        </View>
 
-        <Input
-          label="Contraseña"
-          placeholder="********"
-          variant="password"
-          containerClassName=" w-full mb-7"
-          value={form.password}
-          onChangeText={(text) => handleOnChange('password', text)}
-        />
+        <View className="flex flex-row gap-2">
+          <View className="mb-4 flex-1">
+            <Input
+              label="Provincia / Ciudad"
+              placeholder="Buenos Aires"
+              variant="email"
+              containerClassName=""
+              value={form.provincia}
+              onChangeText={(text) => handleOnChange('provincia', text)}
+            />
+            {errors.provincia && <Text className="text-sm text-red-500">{errors.provincia}</Text>}
+          </View>
+          <View className="mb-4 flex-1">
+            <Input
+              label="Teléfono"
+              placeholder="1123465789"
+              variant="text"
+              containerClassName=""
+              value={form.telefono}
+              onChangeText={(text) => handleOnChange('telefono', text)}
+            />
+            {errors.password && <Text className=" text-sm text-red-500">{errors.telefono}</Text>}
+          </View>
+        </View>
+        <View className="mb-4">
+          <Input
+            label="Correo Electrónico"
+            placeholder="micorreo@gmail.com"
+            variant="email"
+            containerClassName=" w-full"
+            value={form.email}
+            onChangeText={(text) => handleOnChange('email', text)}
+          />
+          {errors.email && <Text className="text-sm text-red-500">{errors.email}</Text>}
+        </View>
+
+        <View className="mb-4">
+          <Input
+            label="Contraseña"
+            placeholder="********"
+            variant="password"
+            containerClassName=" w-full"
+            value={form.password}
+            onChangeText={(text) => handleOnChange('password', text)}
+          />
+          {errors.password && <Text className="text-sm text-red-500">{errors.password}</Text>}
+        </View>
 
         <Button
           variant="primary"

@@ -5,6 +5,7 @@ import Button from '@/components/buttons/Button';
 import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/firebase/firebaseConfig';
+import { loginSchema } from '@/validations/authSchema';
 
 interface LoginProps {
   setIsLogin: (login: boolean) => void;
@@ -12,6 +13,7 @@ interface LoginProps {
 }
 
 export default function Login({ setIsLogin, setAuthUser }: LoginProps) {
+  const [errors, setErrors] = useState<any>({});
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -22,10 +24,16 @@ export default function Login({ setIsLogin, setAuthUser }: LoginProps) {
       ...form,
       [field]: value,
     });
+
+    setErrors({
+      ...errors,
+      [field]: '',
+    });
   }
 
   async function login(email: string, password: string) {
     try {
+      await loginSchema.validate(form, { abortEarly: false });
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       setAuthUser(true);
       console.log('Usuario logueado:', userCredential.user);
@@ -45,22 +53,29 @@ export default function Login({ setIsLogin, setAuthUser }: LoginProps) {
         <Text className="font-outfit text-3xl font-bold text-primary">Luma</Text>
       </View>
       <View className="w-full">
-        <Input
-          label="Correo Electrónico"
-          placeholder="micorreo@gmail.com"
-          variant="email"
-          containerClassName=" w-full mb-7"
-          value={form.email}
-          onChangeText={(text) => handleOnChange('email', text)}
-        />
-        <Input
-          label="Contraseña"
-          placeholder="********"
-          variant="password"
-          containerClassName=" w-full mb-7"
-          value={form.password}
-          onChangeText={(text) => handleOnChange('password', text)}
-        />
+        <View className="mb-4">
+          <Input
+            label="Correo Electrónico"
+            placeholder="micorreo@gmail.com"
+            variant="email"
+            containerClassName=" w-full"
+            value={form.email}
+            onChangeText={(text) => handleOnChange('email', text)}
+          />
+          {errors.email && <Text className="text-sm text-red-500">{errors.email}</Text>}
+        </View>
+
+        <View className="mb-4">
+          <Input
+            label="Contraseña"
+            placeholder="********"
+            variant="password"
+            containerClassName=" w-full"
+            value={form.password}
+            onChangeText={(text) => handleOnChange('password', text)}
+          />
+          {errors.password && <Text className="text-sm text-red-500">{errors.password}</Text>}
+        </View>
 
         <Button
           variant="primary"
