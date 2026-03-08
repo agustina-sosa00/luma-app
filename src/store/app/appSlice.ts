@@ -7,12 +7,16 @@ interface IUser {
   telefono: string;
   provincia: string;
 }
+interface FilterState {
+  category: string | null;
+}
 interface AppState {
   categories: any[];
   places: any[];
   favorites: string[];
   loading: boolean;
   user: IUser;
+  category: FilterState | null;
 }
 
 const initialState: AppState = {
@@ -27,6 +31,7 @@ const initialState: AppState = {
     telefono: '',
     provincia: '',
   },
+  category: null,
 };
 
 const appSlice = createSlice({
@@ -48,9 +53,23 @@ const appSlice = createSlice({
     addUser: (state, action) => {
       state.user = action.payload;
     },
+    setCategoryFilter: (state, action) => {
+      state.category = action.payload;
+    },
+    clearCategoryFilter: (state) => {
+      state.category = null;
+    },
   },
 });
 
-export const { setCategories, setPlaces, addFavorite, removeFavorite, addUser } = appSlice.actions;
+export const {
+  setCategories,
+  setPlaces,
+  addFavorite,
+  removeFavorite,
+  addUser,
+  setCategoryFilter,
+  clearCategoryFilter,
+} = appSlice.actions;
 
 export default appSlice.reducer;

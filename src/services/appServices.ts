@@ -9,7 +9,10 @@ export const appServices = createApi({
     getCategories: builder.query<any, void>({
       query: () => 'categories.json',
     }),
+    getPlaces: builder.query<any, void>({
+      query: () => 'places.json',
+    }),
   }),
 });
 
-export const { useGetCategoriesQuery } = appServices;
+export const { useGetCategoriesQuery, useGetPlacesQuery } = appServices;
