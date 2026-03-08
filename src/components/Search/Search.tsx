@@ -53,11 +53,11 @@ export default function Search({
         onSubmitEditing={onSubmit}
       />
 
-      {buttonClean && value ? (
+      {buttonClean && isSearching ? (
         <Button
           variant="error"
           onPress={handleClean}
-          icon={<MaterialIcons name="cleaning-services" size={18} />}
+          icon={<MaterialIcons name="cleaning-services" size={20} color="white" />}
           containerClassName="h-12"
         />
       ) : (
@@ -65,7 +65,7 @@ export default function Search({
           variant="primary"
           onPress={handleOnSearch}
           loader={isLoading}
-          icon={<Ionicons name="search" size={18} color="white" />}
+          icon={<Ionicons name="search" size={20} color="white" />}
           containerClassName="h-12"
         />
       )}

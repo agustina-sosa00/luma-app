@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import CardPlace from './components/CardPlace';
 import { useGetCategoriesQuery, useGetPlacesQuery } from '@/services/appServices';
 import { useNavigation } from '@react-navigation/native';
-import { NavigationProp } from '@/types';
+import { IPlace, NavigationProp } from '@/types';
 import Button from '@/components/buttons/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCategoryFilter } from '@/store/app/appSlice';
@@ -17,8 +17,9 @@ export default function MapScreen() {
 
   const [search, setSearch] = useState('');
   const [searching, setSearching] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { location, loading, error } = useUserLocation();
-  const [selectPlace, setSelectPlace] = useState();
+  const [selectPlace, setSelectPlace] = useState<IPlace | null>();
   const [openFilter, setOpenFilter] = useState(false);
 
   const navigation = useNavigation<NavigationProp>();
@@ -28,14 +29,17 @@ export default function MapScreen() {
   const { data: categories } = useGetCategoriesQuery();
   const selectedCategory = useSelector((state: any) => state.app.category);
 
-  const filteredPlaces = selectedCategory
-    ? places?.filter((place: any) =>
-        place.categoria?.some((cat: string) => cat.toLowerCase() === selectedCategory)
-      )
-    : places;
+  const filteredPlaces = places?.filter((place: any) => {
+    const matchCategory = selectedCategory
+      ? place.categoria?.some((cat: string) => cat.toLowerCase() === selectedCategory)
+      : true;
 
-  console.log('selected category -->>>>>>>>>>>>', selectedCategory);
-  console.log('place', places);
+    const matchSearch = searchQuery
+      ? place.nombre.toLowerCase().includes(searchQuery.toLowerCase())
+      : true;
+
+    return matchCategory && matchSearch;
+  });
 
   const coordinates =
     filteredPlaces?.map((place: any) => ({
@@ -62,11 +66,17 @@ export default function MapScreen() {
   }
 
   function handleSearch() {
+    handleSelectCategory(null);
+    setSelectPlace(null);
+    setSearchQuery(search);
     setSearching(true);
   }
 
   function handleClear() {
+    handleSelectCategory(null);
     setSearch('');
+    setSearchQuery('');
+    setSelectPlace(null);
     setSearching(false);
   }
 
@@ -104,8 +114,6 @@ export default function MapScreen() {
     );
   }
 
-  console.log('searching: --->>>>', !searching);
-  console.log('filteredPlaces: --->>>>', filteredPlaces);
   return (
     <View style={{ flex: 1 }} className="w-full ">
       <View className="absolute  top-4 z-10 flex w-full flex-row items-center gap-1 px-4 ">

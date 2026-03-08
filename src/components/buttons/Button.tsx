@@ -27,7 +27,7 @@ const textVariants = {
   primary: 'text-white',
   secondary: 'text-primary',
   iconButton: 'text-primary',
-  error: 'text-onPrimary',
+  error: 'text-[#FFFFFF]',
 };
 
 const loaderColors = {

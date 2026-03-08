@@ -15,12 +15,18 @@ export default function CardPlace({ place, handleNavigateDetails }: any) {
           <Text className="font-poppinsSemiBold text-base  text-textPrimary">{place.nombre}</Text>
         </View>
         <View className="w-full flex-row items-center justify-between px-2">
+          <Text className="font-poppinsSemiBold text-sm  capitalize text-[#494949]">
+            {place.subcategoria}
+          </Text>
+        </View>
+        <View className="w-full flex-row items-center justify-between px-2">
           <Text className="text-sm font-medium text-disabled ">{place.direccion}</Text>
 
-          <Pressable onPress={handleNavigateDetails}>
-            <Text>
-              Ver Detalles <Icon source={'arrow-right-thin'} size={20} color="#6233B9" />
-            </Text>
+          <Pressable
+            onPress={handleNavigateDetails}
+            className="flex flex-row items-center justify-center">
+            <Text className="md font-semibold text-primary">Ver Detalles</Text>
+            <Icon source={'arrow-right-thin'} size={24} color="#6233B9" />
           </Pressable>
         </View>
       </View>
