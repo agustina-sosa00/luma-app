@@ -66,12 +66,14 @@ export default function MapScreen() {
   }
 
   function handleSearch() {
+    handleSelectCategory(null);
     setSelectPlace(null);
     setSearchQuery(search);
     setSearching(true);
   }
 
   function handleClear() {
+    handleSelectCategory(null);
     setSearch('');
     setSearchQuery('');
     setSelectPlace(null);
