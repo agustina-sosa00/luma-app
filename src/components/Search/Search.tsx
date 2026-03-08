@@ -53,7 +53,7 @@ export default function Search({
         onSubmitEditing={onSubmit}
       />
 
-      {buttonClean && value ? (
+      {buttonClean && isSearching ? (
         <Button
           variant="error"
           onPress={handleClean}
