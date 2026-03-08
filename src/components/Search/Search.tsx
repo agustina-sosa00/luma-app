@@ -9,7 +9,7 @@ interface SearchProps {
   handleClean: () => void;
   isSearching: boolean;
   onChange: (text: string) => void;
-  inputName: string;
+  value: string;
   buttonClean?: boolean;
   placeholder?: string;
   isLoading?: boolean;
@@ -22,7 +22,7 @@ export default function Search({
   handleOnSearch,
   handleClean,
   onChange,
-  inputName,
+  value,
   buttonClean,
   placeholder = 'Buscar...',
   isLoading,
@@ -38,14 +38,14 @@ export default function Search({
   };
 
   return (
-    <View className="w-full flex-row items-center gap-1 rounded-lg">
+    <View className="flex-1 flex-row items-center gap-1 rounded-lg">
       <TextInput
         ref={inputRef}
         className={`
-          h-10 flex-1 rounded-md border border-borders bg-onPrimary p-2 text-base
+          h-12 flex-1 rounded-md border border-borders bg-onPrimary p-2 text-base
         `}
         placeholder={placeholder}
-        value={inputName}
+        value={value}
         onChangeText={onChange}
         editable={!isSearching}
         keyboardType={keyboardType}
@@ -53,22 +53,20 @@ export default function Search({
         onSubmitEditing={onSubmit}
       />
 
-      {/* SEARCH */}
-      <Button
-        variant="primary"
-        onPress={handleOnSearch}
-        disabled={isSearching}
-        loader={isLoading}
-        icon={<Ionicons name="search" size={18} color="white" />}
-      />
-
-      {/* CLEAN */}
-      {buttonClean && (
+      {buttonClean && value ? (
         <Button
-          variant="iconButton"
+          variant="error"
           onPress={handleClean}
-          disabled={!isSearching}
           icon={<MaterialIcons name="cleaning-services" size={18} />}
+          containerClassName="h-12"
+        />
+      ) : (
+        <Button
+          variant="primary"
+          onPress={handleOnSearch}
+          loader={isLoading}
+          icon={<Ionicons name="search" size={18} color="white" />}
+          containerClassName="h-12"
         />
       )}
     </View>

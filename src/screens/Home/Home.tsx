@@ -97,12 +97,12 @@ export default function Home({ setSession }: HomeProps) {
           <Search
             handleClean={() => console.log('')}
             onChange={() => console.log('')}
-            inputName=""
+            value=""
             isSearching={false}
           />
         </View>
         <CategoryCarousel>
-          {categories?.map((category) => (
+          {categories?.map((category: any) => (
             <ButtonCategory
               key={category.id}
               textButton={category.nombreCat}
