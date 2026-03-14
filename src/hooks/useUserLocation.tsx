@@ -31,8 +31,6 @@ export function useUserLocation() {
           latitude: currentLocation.coords.latitude,
           longitude: currentLocation.coords.longitude,
         });
-        console.log('latitud: ', currentLocation.coords.latitude);
-        console.log('longitud: ', currentLocation.coords.longitude);
       } catch (err) {
         setError('No se pudo obtener la ubicación');
       } finally {
