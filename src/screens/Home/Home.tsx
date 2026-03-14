@@ -20,8 +20,6 @@ export default function Home({ setSession }: HomeProps) {
 
   const { data: categories } = useGetCategoriesQuery();
 
-  console.log('categories---------', categories);
-
   const [userData, setUserData] = useState<User | null>(null);
   const MOCK_PLACES = [
     {
@@ -68,13 +66,11 @@ export default function Home({ setSession }: HomeProps) {
       dispatch(addUser(data));
     }
   }
-  console.log('Datos del usuario en el store:', userStore);
 
   useEffect(() => {
     getUserData();
   }, []);
 
-  console.log(userData);
   return (
     <ScrollView className="flex-1 bg-onPrimary" showsVerticalScrollIndicator={false}>
       <View className="flex flex-1 gap-8 bg-onPrimary px-5 py-2">
