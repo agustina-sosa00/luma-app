@@ -19,7 +19,7 @@ export default function MapScreen() {
   const [searching, setSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { location, loading, error } = useUserLocation();
-  const [selectPlace, setSelectPlace] = useState<IPlace | null>();
+  const [selectPlace, setSelectPlace] = useState<IPlace | null>(null);
   const [openFilter, setOpenFilter] = useState(false);
   const [indexPlace, setIndexPlace] = useState(0);
 
@@ -27,10 +27,13 @@ export default function MapScreen() {
   const dispatch = useDispatch();
 
   const { data: places } = useGetPlacesQuery();
+  const placesArray = (Object.values(places ?? {}) as IPlace[]).filter(
+    (place) => place && place.id && !isNaN(Number(place.latitud)) && !isNaN(Number(place.longitud))
+  );
   const { data: categories } = useGetCategoriesQuery();
   const selectedCategory = useSelector((state: any) => state.app.category);
 
-  const filteredPlaces = places?.filter((place: any) => {
+  const filteredPlaces = placesArray?.filter((place: IPlace) => {
     const matchCategory = selectedCategory
       ? place.categoria?.some((cat: string) => cat.toLowerCase() === selectedCategory)
       : true;
@@ -42,11 +45,10 @@ export default function MapScreen() {
     return matchCategory && matchSearch;
   });
 
-  const coordinates =
-    filteredPlaces?.map((place: any) => ({
-      latitude: place.latitud,
-      longitude: place.longitud,
-    })) || [];
+  const coordinates = filteredPlaces.map((place) => ({
+    latitude: Number(place.latitud),
+    longitude: Number(place.longitud),
+  }));
 
   useEffect(() => {
     if (!mapRef.current || coordinates.length === 0) return;
@@ -156,18 +158,25 @@ export default function MapScreen() {
           }}
           title="Mi ubicación"
         />
-        {filteredPlaces?.map((place: any, index: number) => (
-          <Marker
-            key={place.id}
-            coordinate={{
-              latitude: place.latitud,
-              longitude: place.longitud,
-            }}
-            title={place.nombre}
-            description={place?.subcategoria}
-            onPress={() => handleOpenCard({ place, index })}
-          />
-        ))}
+        {filteredPlaces.map((place, index) => {
+          const lat = Number(place.latitud);
+          const lng = Number(place.longitud);
+
+          if (isNaN(lat) || isNaN(lng)) return null;
+
+          return (
+            <Marker
+              key={place.id}
+              coordinate={{
+                latitude: lat,
+                longitude: lng,
+              }}
+              title={place.nombre}
+              description={place?.subcategoria}
+              onPress={() => handleOpenCard({ place, index })}
+            />
+          );
+        })}
       </MapView>
 
       {selectPlace && (

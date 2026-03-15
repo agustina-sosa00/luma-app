@@ -9,10 +9,11 @@ interface RegisterData {
   provincia: string;
   email: string;
   password: string;
+  favorites: string[];
 }
 
 export async function registerUser(data: RegisterData) {
-  const { nombre, apellido, email, password, telefono, provincia } = data;
+  const { nombre, apellido, email, password, telefono, provincia, favorites } = data;
 
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -25,6 +26,7 @@ export async function registerUser(data: RegisterData) {
       email: email,
       telefono: telefono,
       provincia: provincia,
+      favorites: favorites,
     });
 
     await sendEmailVerification(user);

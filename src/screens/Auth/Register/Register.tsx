@@ -33,11 +33,13 @@ export default function Register({ setIsLogin }: RegisterProps) {
         provincia: form.provincia,
         email: form.email,
         password: form.password,
+        favorites: [],
       });
       setLoader(false);
       alert('Cuenta creada. Verificá tu email.');
       setIsLogin(true);
     } catch (error: any) {
+      console.log(error);
       if (error.inner) {
         const newErrors: any = {};
 
@@ -47,6 +49,7 @@ export default function Register({ setIsLogin }: RegisterProps) {
 
         setErrors(newErrors);
       }
+      setLoader(false);
     }
   }
 
@@ -92,7 +95,7 @@ export default function Register({ setIsLogin }: RegisterProps) {
               value={form.apellido}
               onChangeText={(text) => handleOnChange('apellido', text)}
             />
-            {errors.password && <Text className=" text-sm text-red-500">{errors.apellido}</Text>}
+            {errors.apellido && <Text className=" text-sm text-red-500">{errors.apellido}</Text>}
           </View>
 
           <View className="flex flex-row gap-2">
@@ -116,7 +119,7 @@ export default function Register({ setIsLogin }: RegisterProps) {
                 value={form.telefono}
                 onChangeText={(text) => handleOnChange('telefono', text)}
               />
-              {errors.password && <Text className=" text-sm text-red-500">{errors.telefono}</Text>}
+              {errors.telefono && <Text className=" text-sm text-red-500">{errors.telefono}</Text>}
             </View>
           </View>
           <View className="mb-4">
