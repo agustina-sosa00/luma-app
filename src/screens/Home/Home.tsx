@@ -68,6 +68,10 @@ export default function Home() {
     getUserData();
   }
 
+  function handleNavigateCategory(category: string) {
+    navigation.navigate('PlaceCategories', { category });
+  }
+
   return (
     <ScrollView className="flex-1 bg-onPrimary" showsVerticalScrollIndicator={false}>
       <View className="flex flex-1 gap-8 bg-onPrimary px-5 py-2">
@@ -94,6 +98,7 @@ export default function Home() {
               textButton={category.nombreCat}
               sourceIcon={category.icono}
               sizeIcon={24}
+              onPress={() => handleNavigateCategory(category.nombreCat)}
             />
           ))}
         </CategoryCarousel>

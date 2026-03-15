@@ -1,6 +1,5 @@
 import { Pressable, Text, View } from 'react-native';
 import Search from '@/components/Search/Search';
-import { useUserLocation } from '@/hooks/useUserLocation';
 import MapView, { Marker } from 'react-native-maps';
 import { ActivityIndicator, Icon } from 'react-native-paper';
 import { useEffect, useRef, useState } from 'react';
@@ -12,13 +11,12 @@ import Button from '@/components/buttons/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCategoryFilter } from '@/store/app/appSlice';
 
-export default function MapScreen() {
+export default function MapScreen({ location, error, loading }: any) {
   const mapRef = useRef<MapView | null>(null);
 
   const [search, setSearch] = useState('');
   const [searching, setSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { location, loading, error } = useUserLocation();
   const [selectPlace, setSelectPlace] = useState<IPlace | null>(null);
   const [openFilter, setOpenFilter] = useState(false);
   const [indexPlace, setIndexPlace] = useState(0);

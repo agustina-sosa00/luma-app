@@ -1,3 +1,4 @@
+import { IPlace } from '@/types';
 import React from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
 import { Icon } from 'react-native-paper';
@@ -7,9 +8,17 @@ export default function CardPlaceHome({
   handleNavigateDetails,
   handleFavorite,
   favorite,
-}: any) {
+  width,
+}: {
+  place: IPlace;
+  handleNavigateDetails?: () => void;
+  handleFavorite: (id: string) => void;
+  favorite?: boolean;
+  width?: string;
+}) {
   return (
-    <View className="relative mr-4 h-56 w-72 items-center rounded-lg border border-borders">
+    <View
+      className={`relative mr-4 ${width ? `w-${width}` : 'w-72'} h-56  items-center rounded-lg border border-borders`}>
       <View className="flex h-full w-full justify-between rounded-lg bg-onPrimary pb-2">
         <Image
           source={{
@@ -20,13 +29,15 @@ export default function CardPlaceHome({
 
         <View className="flex w-full flex-row justify-between px-2 py-1">
           <Text className="font-poppinsSemiBold text-base text-textPrimary">{place.nombre}</Text>
-          <Pressable onPress={() => handleFavorite(place.id)}>
-            <Icon
-              source={favorite ? 'heart' : 'heart-outline'}
-              size={24}
-              color={favorite ? '#6233B9' : '#151515'}
-            />
-          </Pressable>
+          {favorite && (
+            <Pressable onPress={() => handleFavorite(place.id)}>
+              <Icon
+                source={favorite ? 'heart' : 'heart-outline'}
+                size={24}
+                color={favorite ? '#6233B9' : '#151515'}
+              />
+            </Pressable>
+          )}
         </View>
 
         <View className="px-2">
