@@ -2,7 +2,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type RootStackParamList = {
   Tabs: undefined;
-  PlaceDetail: { place: any };
+  PlaceDetail: { place: any; index: number };
 };
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Tabs'>;
@@ -31,4 +31,10 @@ export interface IPlace {
   subcategoria: string;
   telefono: string;
   valoracion: number;
+}
+
+export interface FileType {
+  uri: string;
+  name: string;
+  mimeType?: string;
 }

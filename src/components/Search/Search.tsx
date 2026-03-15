@@ -1,7 +1,8 @@
 import { useEffect, RefObject } from 'react';
 import { View, TextInput, Keyboard } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import Button from '../buttons/Button';
+import { Icon } from 'react-native-paper';
 
 interface SearchProps {
   inputRef?: RefObject<TextInput>;
@@ -65,8 +66,8 @@ export default function Search({
           variant="primary"
           onPress={handleOnSearch}
           loader={isLoading}
-          icon={<Ionicons name="search" size={20} color="white" />}
           containerClassName="h-12"
+          icon={<Icon source="magnify" size={20} color="white" />}
         />
       )}
     </View>

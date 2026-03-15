@@ -21,6 +21,7 @@ export default function MapScreen() {
   const { location, loading, error } = useUserLocation();
   const [selectPlace, setSelectPlace] = useState<IPlace | null>();
   const [openFilter, setOpenFilter] = useState(false);
+  const [indexPlace, setIndexPlace] = useState(0);
 
   const navigation = useNavigation<NavigationProp>();
   const dispatch = useDispatch();
@@ -61,7 +62,8 @@ export default function MapScreen() {
     });
   }, [coordinates]);
 
-  function handleOpenCard({ place }: any) {
+  function handleOpenCard({ place, index }: any) {
+    setIndexPlace(index);
     setSelectPlace(place);
   }
 
@@ -81,7 +83,7 @@ export default function MapScreen() {
   }
 
   function handleNavigateDetails() {
-    navigation.navigate('PlaceDetail', { place: selectPlace });
+    navigation.navigate('PlaceDetail', { place: selectPlace, index: indexPlace });
   }
 
   function handleOpenFilter() {
@@ -154,7 +156,7 @@ export default function MapScreen() {
           }}
           title="Mi ubicación"
         />
-        {filteredPlaces?.map((place: any) => (
+        {filteredPlaces?.map((place: any, index: number) => (
           <Marker
             key={place.id}
             coordinate={{
@@ -163,7 +165,7 @@ export default function MapScreen() {
             }}
             title={place.nombre}
             description={place?.subcategoria}
-            onPress={() => handleOpenCard({ place })}
+            onPress={() => handleOpenCard({ place, index })}
           />
         ))}
       </MapView>
