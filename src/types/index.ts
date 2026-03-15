@@ -2,7 +2,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type RootStackParamList = {
   Tabs: undefined;
-  PlaceDetail: { place: any; index: number };
+  PlaceDetail: { place: IPlace | null; index: number };
+  PlaceCategories: { category: string };
 };
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Tabs'>;

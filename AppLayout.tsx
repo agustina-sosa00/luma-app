@@ -9,6 +9,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/firebase/firebaseConfig';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthUser, setSession } from '@/store/auth/authSlice';
+import { useUserLocation } from '@/hooks/useUserLocation';
 
 export default function AppLayout() {
   const dispatch = useDispatch();
@@ -22,6 +23,8 @@ export default function AppLayout() {
   const session = useSelector((state: any) => state.auth.session);
   const authUser = useSelector((state: any) => state.auth.authUser);
   const [isLogin, setIsLogin] = useState(true);
+
+  const { location, loading, error } = useUserLocation();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {

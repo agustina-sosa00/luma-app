@@ -1,58 +1,34 @@
 import { Image, Pressable, ScrollView, Text, View } from 'react-native';
 import avatarLuma from '@assets/avatarLuma.png';
 import { Icon } from 'react-native-paper';
-import Search from '@/components/Search/Search';
 import ButtonCategory from '@/components/buttons/ButtonCategory';
 import CategoryCarousel from './components/CarouselCategories';
 import CardPlaceHome from './components/CardPlacesHome';
 import { logout } from '@/utils/logout';
 import { auth, db } from '@/firebase/firebaseConfig';
-import { useEffect, useState } from 'react';
-import { ref, get } from 'firebase/database';
-import { HomeProps, User } from './types/typeHome';
+import { useEffect } from 'react';
+import { ref, get, set } from 'firebase/database';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from '@/store/app/appSlice';
-import { useGetCategoriesQuery } from '@/services/appServices';
+import { useGetCategoriesQuery, useGetPlacesQuery } from '@/services/appServices';
+import { IPlace, NavigationProp } from '@/types';
+import { useNavigation } from '@react-navigation/native';
 
-export default function Home({ setSession }: HomeProps) {
+export default function Home() {
+  const navigation = useNavigation<NavigationProp>();
   const userStore = useSelector((state: any) => state.app.user);
   const dispatch = useDispatch();
 
+  console.log('user en el home-------->', userStore);
+
   const { data: categories } = useGetCategoriesQuery();
 
-  const [userData, setUserData] = useState<User | null>(null);
-  const MOCK_PLACES = [
-    {
-      id: '1',
-      name: 'Café Morta',
-      direccion: 'Calle Falsa 123',
-      categoria: 'cafe',
-      ubicacion: {
-        latitude: -34.583981,
-        longitude: -58.410234,
-      },
-    },
-    {
-      id: '2',
-      name: 'Burger House',
-      direccion: 'Calle Falsa 123',
-      categoria: 'restaurant',
-      ubicacion: {
-        latitude: -34.584512,
-        longitude: -58.412801,
-      },
-    },
-    {
-      id: '3',
-      name: 'Cine Palermo',
-      direccion: 'Calle Falsa 123',
-      categoria: 'cine',
-      ubicacion: {
-        latitude: -34.582144,
-        longitude: -58.40899,
-      },
-    },
-  ];
+  const { data: placesData } = useGetPlacesQuery();
+  const placesArray: IPlace[] = Object.values(placesData ?? {});
+
+  useEffect(() => {
+    getUserData();
+  }, []);
 
   async function getUserData() {
     const user = auth.currentUser;
@@ -67,9 +43,34 @@ export default function Home({ setSession }: HomeProps) {
     }
   }
 
-  useEffect(() => {
+  function handleNavigateDetails({ place, index }: { place: IPlace; index: number }) {
+    navigation.navigate('PlaceDetail', { place, index });
+  }
+
+  async function addFavorite(placeId: string) {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const favoritesRef = ref(db, `users/${user.uid}/favorites`);
+
+    const snapshot = await get(favoritesRef);
+
+    let favorites: string[] = snapshot.exists() ? snapshot.val() : [];
+
+    if (favorites.includes(placeId)) {
+      favorites = favorites.filter((id) => id !== placeId);
+    } else {
+      favorites.push(placeId);
+    }
+
+    await set(favoritesRef, favorites);
+
     getUserData();
-  }, []);
+  }
+
+  function handleNavigateCategory(category: string) {
+    navigation.navigate('PlaceCategories', { category });
+  }
 
   return (
     <ScrollView className="flex-1 bg-onPrimary" showsVerticalScrollIndicator={false}>
@@ -89,14 +90,7 @@ export default function Home({ setSession }: HomeProps) {
           </Pressable>
           <Image source={avatarLuma} className="h-16 w-16 rounded-full" />
         </View>
-        <View className="flex h-16 w-full justify-center ">
-          <Search
-            handleClean={() => console.log('')}
-            onChange={() => console.log('')}
-            value=""
-            isSearching={false}
-          />
-        </View>
+
         <CategoryCarousel>
           {categories?.map((category: any) => (
             <ButtonCategory
@@ -104,42 +98,39 @@ export default function Home({ setSession }: HomeProps) {
               textButton={category.nombreCat}
               sourceIcon={category.icono}
               sizeIcon={24}
+              onPress={() => handleNavigateCategory(category.nombreCat)}
             />
           ))}
         </CategoryCarousel>
-        <View className="w-full ">
-          <View className="flex w-full flex-row items-center justify-between">
-            <Text className="mb-2 font-poppinsSemiBold text-2xl">Café</Text>
-            <Text className="mb-2 font-poppinsSemiBold text-sm text-textSecondary">Ver más</Text>
+        {categories?.map((category: any) => (
+          <View key={category.id} className="w-full">
+            <View className="flex w-full flex-row items-center justify-between">
+              <Text className="mb-2 font-poppinsSemiBold text-2xl">{category.nombreCat}</Text>
+              <Pressable onPress={() => handleNavigateCategory(category.nombreCat)}>
+                <Text className="mb-2 font-poppinsSemiBold text-sm text-textSecondary">
+                  Ver más
+                </Text>
+              </Pressable>
+            </View>
+
+            <CategoryCarousel>
+              {placesArray
+                .filter((place) => place.categoria?.includes(category.nombreCat))
+                .map((place, index) => {
+                  const favorite = userStore?.favorites?.includes(place.id);
+                  return (
+                    <CardPlaceHome
+                      key={place.id}
+                      place={place}
+                      handleNavigateDetails={() => handleNavigateDetails({ place, index })}
+                      handleFavorite={addFavorite}
+                      favorite={favorite}
+                    />
+                  );
+                })}
+            </CategoryCarousel>
           </View>
-          <CategoryCarousel>
-            {MOCK_PLACES.map((place) => (
-              <CardPlaceHome key={place.id} place={place} />
-            ))}
-          </CategoryCarousel>
-        </View>
-        <View className="w-full ">
-          <View className="flex w-full flex-row items-center justify-between">
-            <Text className="mb-2 font-poppinsSemiBold text-2xl">Café</Text>
-            <Text className="mb-2 font-poppinsSemiBold text-sm text-textSecondary">Ver más</Text>
-          </View>
-          <CategoryCarousel>
-            {MOCK_PLACES.map((place) => (
-              <CardPlaceHome key={place.id} place={place} />
-            ))}
-          </CategoryCarousel>
-        </View>
-        <View className="w-full ">
-          <View className="flex w-full flex-row items-center justify-between">
-            <Text className="mb-2 font-poppinsSemiBold text-2xl">Café</Text>
-            <Text className="mb-2 font-poppinsSemiBold text-sm text-textSecondary">Ver más</Text>
-          </View>
-          <CategoryCarousel>
-            {MOCK_PLACES.map((place) => (
-              <CardPlaceHome key={place.id} place={place} />
-            ))}
-          </CategoryCarousel>
-        </View>
+        ))}
       </View>
     </ScrollView>
   );

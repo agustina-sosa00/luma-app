@@ -3,6 +3,7 @@ import Home from '@/screens/Home/Home';
 import Favorites from '@/screens/Favorites/Favorites';
 import MapScreen from '@/screens/Map/MapScreen';
 import { Icon } from 'react-native-paper';
+import { useUserLocation } from '@/hooks/useUserLocation';
 const Tab = createBottomTabNavigator();
 
 interface TabNavigatorProps {
@@ -10,6 +11,8 @@ interface TabNavigatorProps {
 }
 
 export default function TabNavigator({ setSession }: TabNavigatorProps) {
+  const { location, loading, error } = useUserLocation();
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -31,16 +34,19 @@ export default function TabNavigator({ setSession }: TabNavigatorProps) {
           tabBarIcon: ({ color }) => <Icon source="home" size={26} color={color} />,
           title: 'titleeeeee',
           tabBarLabel: 'name boton',
-        }}>
-        {(props) => <Home {...props} setSession={setSession} />}
-      </Tab.Screen>
+        }}
+        component={Home}
+      />
+
       <Tab.Screen
         name="Mapa"
-        component={MapScreen}
         options={{
           tabBarIcon: ({ color }) => <Icon source="map" size={24} color={color} />,
-        }}
-      />
+        }}>
+        {() => (
+          <MapScreen location={location} loading={loading} error={error} setSession={setSession} />
+        )}
+      </Tab.Screen>
       <Tab.Screen
         name="Favorites"
         component={Favorites}
