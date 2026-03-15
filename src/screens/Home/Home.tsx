@@ -106,7 +106,11 @@ export default function Home() {
           <View key={category.id} className="w-full">
             <View className="flex w-full flex-row items-center justify-between">
               <Text className="mb-2 font-poppinsSemiBold text-2xl">{category.nombreCat}</Text>
-              <Text className="mb-2 font-poppinsSemiBold text-sm text-textSecondary">Ver más</Text>
+              <Pressable onPress={() => handleNavigateCategory(category.nombreCat)}>
+                <Text className="mb-2 font-poppinsSemiBold text-sm text-textSecondary">
+                  Ver más
+                </Text>
+              </Pressable>
             </View>
 
             <CategoryCarousel>
