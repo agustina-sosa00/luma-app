@@ -2,14 +2,14 @@ import { forwardRef, useState } from 'react';
 import { Text, TextInput, View, Pressable } from 'react-native';
 import { Icon } from 'react-native-paper';
 
-type InputVariant = 'text' | 'password' | 'email' | 'number';
+type InputVariant = 'text' | 'password' | 'email' | 'number' | 'textarea';
 
 interface InputProps {
   label?: string;
   placeholder?: string;
   value?: string;
   onChangeText?: (text: string) => void;
-  variant: InputVariant;
+  variant?: InputVariant;
   disabled?: boolean;
   containerClassName?: string;
 }
@@ -24,9 +24,11 @@ export default forwardRef<TextInput, InputProps>(function Input(
   const keyboardType =
     variant === 'email' ? 'email-address' : variant === 'number' ? 'numeric' : 'default';
 
+  const isTextarea = variant === 'textarea';
+
   return (
     <View className={`flex gap-1 ${containerClassName ?? ''}`}>
-      {label && <Text className="text-sm font-semibold text-textPrimary">{label}</Text>}
+      {label && <Text className="text-md font-semibold text-textPrimary">{label}</Text>}
 
       <View className="relative">
         <TextInput
@@ -37,12 +39,16 @@ export default forwardRef<TextInput, InputProps>(function Input(
           placeholder={placeholder}
           keyboardType={keyboardType}
           secureTextEntry={variant === 'password' && !showPassword}
+          multiline={isTextarea}
+          numberOfLines={isTextarea ? 4 : 1}
+          textAlignVertical={isTextarea ? 'top' : 'center'}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          className={` h-12 
+          className={`
             rounded-md border bg-white px-3 py-2 text-base text-black
-            ${focused ? 'border-primary' : 'border-gray-400'}
-            ${disabled ? 'border-gray-300 bg-gray-100' : ''}
+            ${isTextarea ? 'min-h-[120px]' : 'h-12'}
+            ${focused ? 'border-primary' : 'border-borders'}
+            ${disabled ? 'border-disabled bg-gray-100' : ''}
           `}
         />
 
