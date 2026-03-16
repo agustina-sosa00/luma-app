@@ -4,6 +4,7 @@ import Favorites from '@/screens/Favorites/Favorites';
 import MapScreen from '@/screens/Map/MapScreen';
 import { Icon } from 'react-native-paper';
 import { useUserLocation } from '@/hooks/useUserLocation';
+import CustomHeader from '@/components/CustomHeader';
 const Tab = createBottomTabNavigator();
 
 interface TabNavigatorProps {
@@ -28,15 +29,7 @@ export default function TabNavigator({ setSession }: TabNavigatorProps) {
           fontSize: 18,
         },
       }}>
-      <Tab.Screen
-        name="Home"
-        options={{
-          tabBarIcon: ({ color }) => <Icon source="home" size={26} color={color} />,
-          title: 'titleeeeee',
-          tabBarLabel: 'name boton',
-        }}
-        component={Home}
-      />
+      <Tab.Screen name="Home" component={Home} />
 
       <Tab.Screen
         name="Mapa"
