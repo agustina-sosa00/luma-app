@@ -4,32 +4,28 @@
     "slug": "Luma app",
     "version": "1.0.0",
     "web": {
-      "favicon": "./assets/favicon.png",
+      "favicon": "./assets/logoLuma.png",
       "bundler": "metro"
     },
     "experiments": {
       "tsconfigPaths": true
     },
-    "plugins": [
-      "expo-font"
-    ],
+    "plugins": ["expo-font"],
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logoLuma.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logoLuma.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logoLuma.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.anonymous.Lumaapp"
