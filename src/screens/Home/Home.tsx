@@ -6,20 +6,20 @@ import CategoryCarousel from './components/CarouselCategories';
 import CardPlaceHome from './components/CardPlacesHome';
 import { logout } from '@/utils/logout';
 import { auth, db } from '@/firebase/firebaseConfig';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ref, get, set } from 'firebase/database';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from '@/store/app/appSlice';
 import { useGetCategoriesQuery, useGetPlacesQuery } from '@/services/appServices';
 import { IPlace, NavigationProp } from '@/types';
 import { useNavigation } from '@react-navigation/native';
+import Menu from '@/components/Menu';
 
 export default function Home() {
   const navigation = useNavigation<NavigationProp>();
   const userStore = useSelector((state: any) => state.app.user);
   const dispatch = useDispatch();
-
-  console.log('user en el home-------->', userStore);
+  const [openMenu, setOpenMenu] = useState(false);
 
   const { data: categories } = useGetCategoriesQuery();
 
@@ -74,7 +74,7 @@ export default function Home() {
 
   return (
     <ScrollView className="flex-1 bg-onPrimary" showsVerticalScrollIndicator={false}>
-      <View className="flex flex-1 gap-8 bg-onPrimary px-5 py-2">
+      <View className="relative flex flex-1 gap-8 bg-onPrimary px-5 py-2">
         <View className="flex w-full flex-row  justify-between ">
           <View>
             <Text className="text-lg font-semibold text-textPrimary">
@@ -85,10 +85,24 @@ export default function Home() {
             </Text>
           </View>
 
-          <Pressable onPress={() => logout()}>
-            <Text className="text-lg font-semibold text-textPrimary">Cerrar Sesión</Text>
-          </Pressable>
-          <Image source={avatarLuma} className="h-16 w-16 rounded-full" />
+          {userStore?.image ? (
+            <Pressable
+              onPress={() => setOpenMenu(!openMenu)}
+              className="flex h-14 w-14 items-center justify-center rounded-full bg-primary">
+              <Image
+                source={userStore?.image && { uri: userStore.image }}
+                className="h-full w-full rounded-full"
+              />
+            </Pressable>
+          ) : (
+            <Pressable
+              onPress={() => setOpenMenu(!openMenu)}
+              className="flex h-14 w-14 items-center justify-center rounded-full bg-primary">
+              <Text className="font-poppinsSemiBold text-3xl text-onPrimary">
+                {userStore?.nombre.charAt(0).toUpperCase()}
+              </Text>
+            </Pressable>
+          )}
         </View>
 
         <CategoryCarousel>
@@ -131,6 +145,8 @@ export default function Home() {
             </CategoryCarousel>
           </View>
         ))}
+
+        {openMenu && <Menu logout={logout} />}
       </View>
     </ScrollView>
   );

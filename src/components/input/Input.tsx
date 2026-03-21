@@ -45,10 +45,10 @@ export default forwardRef<TextInput, InputProps>(function Input(
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           className={`
-            rounded-md border bg-white px-3 py-2 text-base text-black
+            e rounded-md border px-3 py-2 text-base text-black
             ${isTextarea ? 'min-h-[120px]' : 'h-12'}
             ${focused ? 'border-primary' : 'border-borders'}
-            ${disabled ? 'border-disabled bg-gray-100' : ''}
+            ${disabled ? 'border-disabled bg-borders' : 'bg-whit'}
           `}
         />
 

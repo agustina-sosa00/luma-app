@@ -5,6 +5,7 @@ import PlacesDetails from '@/screens/PlacesDetails/PlacesDetails';
 import { RootStackParamList } from '@/types';
 import CustomHeader from '@/components/CustomHeader';
 import PlaceCategories from '@/screens/PlaceCategories/PlaceCategories';
+import ProfileScreen from '@/screens/Profile/ProfileScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function AppNavigator(setSession: any) {
@@ -27,6 +28,13 @@ export default function AppNavigator(setSession: any) {
           component={PlaceCategories}
           options={({ route }) => ({
             header: () => <CustomHeader title={route.params?.category || ''} />,
+          })}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={({ route }) => ({
+            header: () => <CustomHeader title="Perfil" />,
           })}
         />
       </Stack.Navigator>

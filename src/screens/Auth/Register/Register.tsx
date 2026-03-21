@@ -39,7 +39,6 @@ export default function Register({ setIsLogin }: RegisterProps) {
       alert('Cuenta creada. Verificá tu email.');
       setIsLogin(true);
     } catch (error: any) {
-      console.log(error);
       if (error.inner) {
         const newErrors: any = {};
 

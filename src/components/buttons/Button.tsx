@@ -55,8 +55,7 @@ export default function Button({
         <View
           className={`
             ${baseStyles}
-            ${containerVariants[variant]}
-            ${disabled ? 'bg-[#BDBDBD]' : pressed ? 'opacity-80' : ''}
+            ${disabled ? 'bg-[#BDBDBD]' : pressed ? 'opacity-80' : `${containerVariants[variant]}`}
             ${iconPosition === 'right' ? 'flex-row-reverse' : ''}
             ${containerClassName}
           `}>

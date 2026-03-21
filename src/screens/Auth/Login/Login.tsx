@@ -50,7 +50,6 @@ export default function Login({ setIsLogin }: LoginProps) {
       setLoader(false);
 
       const user = userCredential.user;
-      console.log('user---------->', user);
       dispatch(
         setAuthUser({
           uid: user.uid,
@@ -59,7 +58,7 @@ export default function Login({ setIsLogin }: LoginProps) {
         })
       );
     } catch (error: any) {
-      console.log(error.message);
+      alert(error.message);
     }
   }
 

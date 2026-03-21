@@ -35,8 +35,6 @@ export default function PlaceDetails() {
     valoracion: 0,
   });
 
-  console.log('review---->', review);
-
   const openWebsite = () => {
     if (place.sitio_web) {
       Linking.openURL(place.sitio_web);
@@ -75,7 +73,7 @@ export default function PlaceDetails() {
 
       closeModal();
     } catch (error) {
-      console.log('Error guardando reseña', error);
+      alert('Error guardando reseña');
     }
   }
 

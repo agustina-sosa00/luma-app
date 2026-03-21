@@ -4,6 +4,7 @@ export type RootStackParamList = {
   Tabs: undefined;
   PlaceDetail: { place: IPlace | null; index: number };
   PlaceCategories: { category: string };
+  Profile: undefined;
 };
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Tabs'>;

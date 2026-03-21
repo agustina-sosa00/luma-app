@@ -5,6 +5,6 @@ export async function logout() {
   try {
     await signOut(auth);
   } catch (error) {
-    console.log('Error al cerrar sesión:', error);
+    alert('Error al cerrar sesión:');
   }
 }
