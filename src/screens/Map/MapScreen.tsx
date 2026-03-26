@@ -26,32 +26,37 @@ export default function MapScreen({ location, error, loading }: any) {
 
   const { data: places } = useGetPlacesQuery();
   const placesArray = (Object.values(places ?? {}) as IPlace[]).filter(
-    (place) => place && place.id && !isNaN(Number(place.latitud)) && !isNaN(Number(place.longitud))
+    (place) =>
+      place && place?.id && !isNaN(Number(place?.latitud)) && !isNaN(Number(place?.longitud))
   );
   const { data: categories } = useGetCategoriesQuery();
   const selectedCategory = useSelector((state: any) => state.app.category);
 
   const filteredPlaces = placesArray?.filter((place: IPlace) => {
     const matchCategory = selectedCategory
-      ? place.categoria?.some((cat: string) => cat.toLowerCase() === selectedCategory)
+      ? place?.categoria?.some((cat: string) => cat.toLowerCase() === selectedCategory)
       : true;
 
     const matchSearch = searchQuery
-      ? place.nombre.toLowerCase().includes(searchQuery.toLowerCase())
+      ? place?.nombre?.toLowerCase().includes(searchQuery.toLowerCase())
       : true;
 
     return matchCategory && matchSearch;
   });
 
-  const coordinates = filteredPlaces.map((place) => ({
-    latitude: Number(place.latitud),
-    longitude: Number(place.longitud),
+  const coordinates = filteredPlaces?.map((place) => ({
+    latitude: Number(place?.latitud),
+    longitude: Number(place?.longitud),
   }));
 
   useEffect(() => {
-    if (!mapRef.current || coordinates.length === 0) return;
+    if (!mapRef?.current || coordinates?.length === 0) return;
 
-    mapRef.current.fitToCoordinates(coordinates, {
+    const validCoords = coordinates.filter((c) => !isNaN(c?.latitude) && !isNaN(c?.longitude));
+
+    if (validCoords?.length === 0) return;
+
+    mapRef?.current.fitToCoordinates(validCoords, {
       edgePadding: {
         top: 100,
         right: 100,
@@ -94,7 +99,7 @@ export default function MapScreen({ location, error, loading }: any) {
     if (!category) {
       dispatch(setCategoryFilter(null));
     } else {
-      dispatch(setCategoryFilter(category.nombreCat.toLowerCase()));
+      dispatch(setCategoryFilter(category?.nombreCat.toLowerCase()));
     }
 
     setOpenFilter(false);
@@ -112,6 +117,14 @@ export default function MapScreen({ location, error, loading }: any) {
     return (
       <View className="flex-1 items-center justify-center">
         <Text>No se pudo obtener la ubicación</Text>
+      </View>
+    );
+  }
+
+  if (!location?.latitude || !location?.longitude) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <Text>Cargando ubicación...</Text>
       </View>
     );
   }
@@ -140,8 +153,8 @@ export default function MapScreen({ location, error, loading }: any) {
         ref={mapRef}
         style={{ flex: 1 }}
         initialRegion={{
-          latitude: location.latitude,
-          longitude: location.longitude,
+          latitude: location?.latitude,
+          longitude: location?.longitude,
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         }}
@@ -149,27 +162,27 @@ export default function MapScreen({ location, error, loading }: any) {
       >
         <Marker
           coordinate={{
-            latitude: location.latitude,
-            longitude: location.longitude,
+            latitude: location?.latitude,
+            longitude: location?.longitude,
             // latitude: -34.583333,
             // longitude: -58.416667,
           }}
           title="Mi ubicación"
         />
         {filteredPlaces.map((place, index) => {
-          const lat = Number(place.latitud);
-          const lng = Number(place.longitud);
+          const lat = Number(place?.latitud);
+          const lng = Number(place?.longitud);
 
           if (isNaN(lat) || isNaN(lng)) return null;
 
           return (
             <Marker
-              key={place.id}
+              key={place?.id}
               coordinate={{
                 latitude: lat,
                 longitude: lng,
               }}
-              title={place.nombre}
+              title={place?.nombre}
               description={place?.subcategoria}
               onPress={() => handleOpenCard({ place, index })}
             />
@@ -192,11 +205,11 @@ export default function MapScreen({ location, error, loading }: any) {
             </Pressable>
             {categories?.map((category: any) => (
               <Pressable
-                key={category.id}
+                key={category?.id}
                 className="flex flex-row items-center gap-2"
                 onPress={() => handleSelectCategory(category)}>
-                <Text className="text-lg font-semibold text-onPrimary">{category.nombreCat}</Text>
-                <Icon source={category.icono} size={24} color="#ffffff" />
+                <Text className="text-lg font-semibold text-onPrimary">{category?.nombreCat}</Text>
+                <Icon source={category?.icono} size={24} color="#ffffff" />
               </Pressable>
             ))}
           </View>
