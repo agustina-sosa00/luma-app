@@ -29,15 +29,14 @@ export default function CardPlaceHome({
 
         <View className="flex w-full flex-row justify-between px-2 py-1">
           <Text className="font-poppinsSemiBold text-base text-textPrimary">{place.nombre}</Text>
-          {favorite && (
-            <Pressable onPress={() => handleFavorite(place.id)}>
-              <Icon
-                source={favorite ? 'heart' : 'heart-outline'}
-                size={24}
-                color={favorite ? '#6233B9' : '#151515'}
-              />
-            </Pressable>
-          )}
+
+          <Pressable onPress={() => handleFavorite(place.id)}>
+            <Icon
+              source={favorite ? 'heart' : 'heart-outline'}
+              size={24}
+              color={favorite ? '#6233B9' : '#151515'}
+            />
+          </Pressable>
         </View>
 
         <View className="px-2">

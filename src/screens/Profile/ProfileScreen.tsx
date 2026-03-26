@@ -1,15 +1,18 @@
 import { Image, Pressable, ScrollView, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Button from '@/components/buttons/Button';
 import { Icon } from 'react-native-paper';
 import Input from '@/components/input/Input';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { getAuth } from 'firebase/auth';
 import { getDatabase, ref, update } from 'firebase/database';
+import { addUser } from '@/store/app/appSlice';
 
 export default function ProfileScreen() {
   const { user } = useSelector((state: any) => state.app);
+  const dispatch = useDispatch();
+
   const [isEdit, setIsEdit] = useState(false);
   const [formUser, setFormUser] = useState({
     nombre: user?.nombre,
@@ -19,6 +22,19 @@ export default function ProfileScreen() {
     telefono: user?.telefono,
     image: user?.image,
   });
+
+  useEffect(() => {
+    if (user) {
+      setFormUser({
+        nombre: user?.nombre || '',
+        apellido: user?.apellido || '',
+        email: user?.email || '',
+        provincia: user?.provincia || '',
+        telefono: user?.telefono || '',
+        image: user?.image || '',
+      });
+    }
+  }, [user]);
 
   function handleEdit() {
     setIsEdit(!isEdit);
@@ -46,11 +62,13 @@ export default function ProfileScreen() {
         telefono: formUser.telefono,
         image: formUser.image,
       });
+      dispatch(addUser(formUser));
 
       setIsEdit(false);
       alert('Usuario actualizado correctamente');
-    } catch (error) {
-      alert('Error al guardar');
+    } catch (error: any) {
+      console.log(error);
+      alert('Error al guardar: ' + error.message);
     }
   }
 
@@ -118,21 +136,21 @@ export default function ProfileScreen() {
           <Input
             variant="text"
             label="Email: "
-            value={user?.email}
+            value={formUser?.email}
             onChangeText={(email) => setFormUser({ ...formUser, email: email })}
-            disabled={!isEdit}
+            disabled
           />
           <Input
             variant="text"
             label="Provincia / Ciudad: "
-            value={user?.provincia}
+            value={formUser?.provincia}
             onChangeText={(provincia) => setFormUser({ ...formUser, provincia: provincia })}
             disabled={!isEdit}
           />
           <Input
             variant="text"
             label="Teléfono: "
-            value={user?.telefono}
+            value={formUser?.telefono}
             onChangeText={(telefono) => setFormUser({ ...formUser, telefono: telefono })}
             disabled={!isEdit}
           />

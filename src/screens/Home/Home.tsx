@@ -1,5 +1,4 @@
 import { Image, Pressable, ScrollView, Text, View } from 'react-native';
-import avatarLuma from '@assets/avatarLuma.png';
 import { Icon } from 'react-native-paper';
 import ButtonCategory from '@/components/buttons/ButtonCategory';
 import CategoryCarousel from './components/CarouselCategories';
@@ -25,7 +24,7 @@ export default function Home() {
 
   const { data: placesData } = useGetPlacesQuery();
   const placesArray: IPlace[] = Object.values(placesData ?? {});
-
+  console.log(placesArray);
   useEffect(() => {
     getUserData();
   }, []);

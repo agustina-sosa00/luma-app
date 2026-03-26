@@ -28,7 +28,13 @@ export default function TabNavigator({ setSession }: TabNavigatorProps) {
           fontSize: 18,
         },
       }}>
-      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen
+        name="Inicio"
+        component={Home}
+        options={{
+          tabBarIcon: ({ color }) => <Icon source="home" size={24} color={color} />,
+        }}
+      />
 
       <Tab.Screen
         name="Mapa"
@@ -40,7 +46,7 @@ export default function TabNavigator({ setSession }: TabNavigatorProps) {
         )}
       </Tab.Screen>
       <Tab.Screen
-        name="Favorites"
+        name="Favoritos"
         component={Favorites}
         options={{
           tabBarIcon: ({ color }) => <Icon source="cards-heart" size={24} color={color} />,

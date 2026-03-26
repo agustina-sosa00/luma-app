@@ -12,17 +12,18 @@ import {
 import { useRoute } from '@react-navigation/native';
 import { Divider, Icon } from 'react-native-paper';
 import Input from '@/components/input/Input';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import StarRating from 'react-native-star-rating-widget';
 import Button from '@/components/buttons/Button';
 import useHandleModal from '@/hooks/useHandleModal';
 import FilePicker from './FilePicker';
 import { FileType } from '@/types';
-import { getDatabase, ref, push } from 'firebase/database';
+import { getDatabase, ref, push, onValue } from 'firebase/database';
 import * as ImagePicker from 'expo-image-picker';
 export default function PlaceDetails() {
   const route = useRoute<any>();
   const { place, index } = route.params;
+  const [placeData, setPlaceData] = useState(place);
 
   const { isOpen, openModal, closeModal, modalKey } = useHandleModal();
 
@@ -46,6 +47,19 @@ export default function PlaceDetails() {
       Linking.openURL(`tel:${place.telefono}`);
     }
   };
+
+  useEffect(() => {
+    const db = getDatabase();
+    const placeRef = ref(db, `places/${index}`);
+
+    const unsubscribe = onValue(placeRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setPlaceData(snapshot.val());
+      }
+    });
+
+    return () => unsubscribe();
+  }, [index]);
 
   async function handleSaveReview() {
     try {
@@ -72,7 +86,7 @@ export default function PlaceDetails() {
       setFile(null);
 
       closeModal();
-    } catch (error) {
+    } catch {
       alert('Error guardando reseña');
     }
   }
@@ -93,6 +107,8 @@ export default function PlaceDetails() {
       });
     }
   }
+
+  const comentariosArray = Object.values(placeData?.comentarios || {});
 
   return (
     <KeyboardAvoidingView
@@ -174,28 +190,8 @@ export default function PlaceDetails() {
           )}
 
           <Divider />
-          {place.comentarios?.length > 0 ? (
-            <View>
-              <Text className="mb-2 text-lg font-semibold">Reseñas</Text>
 
-              {place.comentarios.map((c: any, index: number) => (
-                <View key={index} className="mb-3 rounded-lg bg-gray-100 p-3">
-                  <View className="flex-row items-center justify-between">
-                    <Text className="font-semibold">{c.usuario}</Text>
-
-                    <View className="flex-row items-center gap-1">
-                      <Icon source="star" size={16} color="#FFD700" />
-                      <Text>{c.valoracion}</Text>
-                    </View>
-                  </View>
-
-                  <Text className="mt-1 text-gray-600">{c.texto}</Text>
-
-                  <Text className="mt-1 text-xs text-gray-400">{c.fecha}</Text>
-                </View>
-              ))}
-            </View>
-          ) : (
+          <View>
             <View className="flex w-full flex-row items-start justify-between ">
               <Text className=" text-lg font-semibold">Reseñas</Text>
               <Button
@@ -206,7 +202,24 @@ export default function PlaceDetails() {
                 onPress={() => openModal('review')}
               />
             </View>
-          )}
+
+            {comentariosArray.map((c: any, index: number) => (
+              <View key={index} className="m-3 rounded-lg bg-gray-100 p-3">
+                <View className="flex-row items-center justify-between">
+                  <Text className="font-semibold">{c.usuario}</Text>
+
+                  <View className="flex-row items-center gap-1">
+                    <Icon source="star" size={16} color="#FFD700" />
+                    <Text>{c.valoracion}</Text>
+                  </View>
+                </View>
+
+                <Text className="mt-1 text-gray-600">{c.texto}</Text>
+
+                <Text className="mt-1 text-xs text-gray-400">{c.fecha}</Text>
+              </View>
+            ))}
+          </View>
 
           {isOpen && modalKey === 'review' && (
             <Modal visible={isOpen} onDismiss={closeModal}>
