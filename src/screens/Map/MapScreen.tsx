@@ -153,23 +153,23 @@ export default function MapScreen({ location, error, loading }: any) {
         ref={mapRef}
         style={{ flex: 1 }}
         initialRegion={{
-          latitude: location?.latitude,
-          longitude: location?.longitude,
+          latitude: location?.latitude || -34.6037,
+          longitude: location?.longitude || -58.3816,
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         }}
         // customMapStyle={mapStyle}>
       >
-        <Marker
-          coordinate={{
-            latitude: location?.latitude,
-            longitude: location?.longitude,
-            // latitude: -34.583333,
-            // longitude: -58.416667,
-          }}
-          title="Mi ubicación"
-        />
-        {filteredPlaces.map((place, index) => {
+        {location?.latitude && location?.longitude && (
+          <Marker
+            coordinate={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+            }}
+            title="Mi ubicación"
+          />
+        )}
+        {filteredPlaces?.map((place, index) => {
           const lat = Number(place?.latitud);
           const lng = Number(place?.longitud);
 

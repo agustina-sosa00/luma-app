@@ -29,11 +29,11 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.anonymous.Lumaapp",
-      "permissions": ["ACCESS_FINE_LOCATION"]
-    },
-    "config": {
-      "googleMaps": {
-        "apiKey": "TU_API_KEY"
+      "permissions": ["ACCESS_FINE_LOCATION"],
+      "config": {
+        "googleMaps": {
+          "apiKey": "TU_API_KEY"
+        }
       }
     }
   }

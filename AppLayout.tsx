@@ -24,8 +24,6 @@ export default function AppLayout() {
   const authUser = useSelector((state: any) => state.auth.authUser);
   const [isLogin, setIsLogin] = useState(true);
 
-  const { location, loading, error } = useUserLocation();
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       dispatch(setSession(!!user));

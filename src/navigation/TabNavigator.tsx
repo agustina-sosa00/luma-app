@@ -4,7 +4,6 @@ import Favorites from '@/screens/Favorites/Favorites';
 import MapScreen from '@/screens/Map/MapScreen';
 import { Icon } from 'react-native-paper';
 import { useUserLocation } from '@/hooks/useUserLocation';
-import CustomHeader from '@/components/CustomHeader';
 const Tab = createBottomTabNavigator();
 
 interface TabNavigatorProps {
